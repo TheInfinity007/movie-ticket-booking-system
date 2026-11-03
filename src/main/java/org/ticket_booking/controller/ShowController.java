@@ -10,8 +10,10 @@ import org.ticket_booking.service.ScreenService;
 import org.ticket_booking.service.SeatsAvailabilityService;
 import org.ticket_booking.service.ShowService;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -31,7 +33,7 @@ public class ShowController {
 
     public List<String> getAvailableSeats(String showId) {
         Show show = showService.getShow(showId);
-        List<Seat> availableSeats = seatsAvailabilityService.getAvailableSeats(show);
-        return availableSeats.stream().map(seat -> seat.getId()).collect(Collectors.toList());
+        Set<String> availableSeats = seatsAvailabilityService.getAvailableSeatIds(show);
+        return new ArrayList<>(availableSeats);
     }
 }

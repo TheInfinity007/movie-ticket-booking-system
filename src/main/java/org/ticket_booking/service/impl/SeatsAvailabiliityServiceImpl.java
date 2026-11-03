@@ -8,7 +8,10 @@ import org.ticket_booking.service.BookingService;
 import org.ticket_booking.service.SeatsAvailabilityService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class SeatsAvailabiliityServiceImpl implements SeatsAvailabilityService {
@@ -17,19 +20,20 @@ public class SeatsAvailabiliityServiceImpl implements SeatsAvailabilityService {
     private SeatLockProvider seatLockProvider;
 
     @Override
-    public List<Seat> getAvailableSeats(Show show) {
-        List<Seat> allSeats = show.getScreen().getSeats();
-        List<Seat> unavailableSeats = getUnavailableSeats(show);
+    public Set<String> getAvailableSeatIds(Show show) {
+        List<String> allSeatsIds = show.getScreen().getSeats().stream().map(Seat::getId).collect(Collectors.toSet());
+        Set<String> unavailableSeats = getUnavailableSeatIds(show);
 
-        List<Seat> availableSeats = new ArrayList<>(allSeats);
+        Set<String> availableSeats = new HashSet<>(allSeatsIds);
         availableSeats.removeAll(unavailableSeats);
 
         return availableSeats;
     }
 
-    private List<Seat> getUnavailableSeats(Show show) {
+    private Set<String> getUnavailableSeatIds(Show show) {
         List<Seat> unavailableSeats = bookingService.getBookedSeats(show);
-        unavailableSeats.addAll(seatLockProvider.getLockedSeats(show));
-        return unavailableSeats;
+        Set<String> unavailableSeatsIds = unavailableSeats.stream().map(Seat::getId).collect(Collectors.toSet());
+        unavailableSeatsIds.addAll(seatLockProvider.getLockedSeats(show));
+        return unavailableSeatsIds;
     }
 }

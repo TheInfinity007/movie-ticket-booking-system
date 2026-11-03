@@ -4,7 +4,8 @@ import org.ticket_booking.model.Seat;
 import org.ticket_booking.model.Show;
 
 import java.util.List;
+import java.util.Set;
 
 public interface SeatsAvailabilityService {
-    List<Seat> getAvailableSeats(Show show);
+    Set<String> getAvailableSeatIds(Show show);
 }
