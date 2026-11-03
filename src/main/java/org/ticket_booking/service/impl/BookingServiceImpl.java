@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class BookingServiceImpl implements BookingService {
 
-    private final Map<String, List<Booking>> bookings = new ConcurrentHashMap<>(); // Map of showid and list of bookings
+    private final Map<String, Booking> bookings = new ConcurrentHashMap<>(); // Map of showid and list of bookings
     private SeatLockProvider seatLockProvider;
 
     @Override
@@ -29,9 +29,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = new Booking(bookingId, show, userId, seats);
 
         // Collections.synchronizedList make the arraylist thread safe
-        bookings.computeIfAbsent(show.getId(), k -> Collections.synchronizedList(new ArrayList<>()))
-                .add(booking);
-
+        bookings.put(bookingId, booking);
         return booking;
 
         // TODO: Create timer for booking expiry
@@ -51,22 +49,28 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking getBooking(String bookingId) {
-        return bookings.values().stream()
-                .flatMap(allBookings -> allBookings.stream())
-                .filter(booking -> booking.getId().equals(bookingId))
-                .findFirst()
-                .orElse(null);
+        return bookings.get(bookingId);
     }
 
     @Override
     public List<Seat> getBookedSeats(Show show) {
-        List<Booking> showBookings = bookings.get(show.getId());
 
-        if (showBookings == null || showBookings.isEmpty()) {
-            return Collections.emptyList();
-        }
+        return getAllBookings(show)
+                .stream().filter(booking -> booking.isConfirmed())
+                .map(booking -> booking.getSeatsBooked())
+                .flatMap(seatsBooked -> seatsBooked.stream())
+                .collect(Collectors.toList());
+    }
 
-        List<Seat> bookedSeats = showBookings.stream().flatMap(b -> b.getSeatsBooked().stream()).collect(Collectors.toList());
-        return bookedSeats;
+    private List<Booking> getAllBookings(Show show) {
+        List<Booking> showBookings = bookings.values().stream()
+                .filter(booking -> booking.getShow().getId().equals(show.getId()))
+                .collect(Collectors.toList());
+        return showBookings;
+    }
+
+    @Override
+    public void confirmBooking(Booking booking, String user) {
+        bookings.get(booking.getId()).confirmBooking();
     }
 }

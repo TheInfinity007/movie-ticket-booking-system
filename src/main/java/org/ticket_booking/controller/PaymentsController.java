@@ -17,6 +17,6 @@ public class PaymentsController {
 
     public void paymentSuccess(String bookingId, String user){
         Booking booking = bookingService.getBooking(bookingId);
-        paymentsService.confirmBooking(booking, user);
+        bookingService.confirmBooking(booking, user);
     }
 }

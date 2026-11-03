@@ -21,7 +21,7 @@ public class Booking {
         this.bookingStatus = BookingStatus.Created;
     }
 
-    public boolean isBooked(){
+    public boolean isConfirmed(){
         return this.bookingStatus == BookingStatus.Confirmed;
     }
 

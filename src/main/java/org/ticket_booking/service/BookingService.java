@@ -13,4 +13,6 @@ public interface BookingService {
     Booking getBooking(String bookingId);
 
     List<Seat> getBookedSeats(Show show);
+
+    void confirmBooking(Booking booking, String user);
 }
