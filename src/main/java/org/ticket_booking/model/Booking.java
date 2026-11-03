@@ -13,7 +13,7 @@ public class Booking {
     private final String user;
     private BookingStatus bookingStatus;
 
-    public Booking(String id, Show show,  String user, List<Seat> seatsBooked, BookingStatus bookingStatus) {
+    public Booking(String id, Show show,  String user, List<Seat> seatsBooked) {
         this.id = id;
         this.show = show;
         this.user = user;

@@ -5,24 +5,33 @@ import org.ticket_booking.model.Seat;
 import org.ticket_booking.model.Show;
 import org.ticket_booking.service.BookingService;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class BookingServiceImpl implements BookingService {
 
-    private final Map<String, List<Booking>> bookings = new HashMap<>(); // Map of showid and list of bookings
+    private final Map<String, List<Booking>> bookings = new ConcurrentHashMap<>(); // Map of showid and list of bookings
 
     @Override
     public Booking createBooking(String userId, Show show, List<Seat> seats) {
-        return null;
+        String bookingId = UUID.randomUUID().toString();
+        Booking booking = new Booking(bookingId, show, userId, seats);
+
+        // Collections.synchronizedList make the arraylist thread safe
+        bookings.computeIfAbsent(bookingId, k -> Collections.synchronizedList(new ArrayList<>()))
+                .add(booking);
+
+        return booking;
     }
 
     @Override
     public Booking getBooking(String bookingId) {
-        return null;
+        return bookings.values().stream()
+                .flatMap(allBookings -> allBookings.stream())
+                .filter(booking-> booking.getId().equals(bookingId))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
