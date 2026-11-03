@@ -1,8 +1,13 @@
 package org.ticket_booking.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.time.Instant;
 import java.util.Date;
 
+@Getter
+@AllArgsConstructor
 public class SeatLock {
     private Seat seat;
     private Show show;
