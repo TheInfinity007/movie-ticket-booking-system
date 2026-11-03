@@ -6,7 +6,7 @@ import org.ticket_booking.model.Show;
 import org.ticket_booking.model.Theatre;
 
 public interface TheatreService {
-    Object getSeat(String seatId, Show show);
+    Seat getSeat(String seatId, Show show);
 
     Theatre create(String theatreName);
 
