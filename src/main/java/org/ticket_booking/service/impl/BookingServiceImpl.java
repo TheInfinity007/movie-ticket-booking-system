@@ -1,5 +1,6 @@
 package org.ticket_booking.service.impl;
 
+import org.ticket_booking.exceptions.BadRequestException;
 import org.ticket_booking.exceptions.SeatNotAvailableException;
 import org.ticket_booking.model.Booking;
 import org.ticket_booking.model.Seat;
@@ -71,6 +72,16 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public void confirmBooking(Booking booking, String user) {
-        bookings.get(booking.getId()).confirmBooking();
+        if (!booking.getUser().equals(user)) {
+            throw new BadRequestException("Invalid booking");
+        }
+
+        for (Seat seat : booking.getSeatsBooked()) {
+            if (!seatLockProvider.validateLock(booking.getShow(), seat, user)) {
+                throw new SeatNotAvailableException("Seat already booked");
+            }
+        }
+
+        booking.confirmBooking();
     }
 }

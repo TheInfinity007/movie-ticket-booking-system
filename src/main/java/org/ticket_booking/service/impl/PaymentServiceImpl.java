@@ -8,9 +8,4 @@ public class PaymentServiceImpl implements PaymentsService {
     public void processPaymentFailed(Booking booking, String user) {
 
     }
-
-    @Override
-    public void confirmBooking(Booking booking, String user) {
-
-    }
 }
