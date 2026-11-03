@@ -5,4 +5,6 @@ import org.ticket_booking.model.Movie;
 
 public interface MovieService {
     Movie create(@NonNull String name);
+
+    Movie getMovie(String movieId);
 }
