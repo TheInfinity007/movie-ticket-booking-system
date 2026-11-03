@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TheatreServiceImpl implements TheatreService {
 
     Map<String, Theatre> theatres = new ConcurrentHashMap<>();
+    Map<String, Seat> seats = new ConcurrentHashMap<>();
     private final ScreenService screenService;
 
 
@@ -46,6 +47,7 @@ public class TheatreServiceImpl implements TheatreService {
     @Override
     public Screen createScreen(String screenName, Theatre theatre) {
         Screen screen = screenService.create(screenName, theatre);
+        theatre.addScreen(screen);
         return screen;
     }
 
@@ -58,7 +60,9 @@ public class TheatreServiceImpl implements TheatreService {
     public Seat createSeatInScreen(Integer rowNo, Integer seatNo, Screen screen) {
         String seatId = UUID.randomUUID().toString();
         Seat seat = new Seat(seatId, rowNo, seatNo);
+        seats.put(seatId, seat);
         screen.addSeat(seat);
+
         return seat;
     }
 }

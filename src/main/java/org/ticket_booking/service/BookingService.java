@@ -11,4 +11,6 @@ public interface BookingService {
     Booking createBooking(String userId, Show show, List<Seat> seats);
 
     Booking getBooking(String bookingId);
+
+    List<Seat> getBookedSeats(Show show);
 }
