@@ -5,6 +5,7 @@ import org.ticket_booking.model.Seat;
 import org.ticket_booking.model.Show;
 import org.ticket_booking.service.BookingService;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,8 @@ public class BookingServiceImpl implements BookingService {
     public List<Seat> getBookedSeats(Show show) {
         List<Booking> showBookings = bookings.get(show.getId());
 
-        if (showBookings == null) {
-            throw new RuntimeException("Booking not found for show " + show);
+        if (showBookings == null || showBookings.isEmpty()) {
+            return Collections.emptyList();
         }
 
         List<Seat> bookedSeats = showBookings.stream().flatMap(b -> b.getSeatsBooked().stream()).collect(Collectors.toList());
