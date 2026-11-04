@@ -33,7 +33,7 @@ public class PaymentServiceImpl implements PaymentsService {
         bookingFailures.put(booking.getId(), newFailuresCount);
 
 
-        if(newFailuresCount > allowedRetries){
+        if (newFailuresCount > allowedRetries) {
             seatLockProvider.unlockSeats(booking.getShow(), booking.getSeatsBooked(), booking.getUser());
         }
     }

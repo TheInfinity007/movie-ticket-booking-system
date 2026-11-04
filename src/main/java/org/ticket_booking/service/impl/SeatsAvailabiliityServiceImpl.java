@@ -21,7 +21,7 @@ public class SeatsAvailabiliityServiceImpl implements SeatsAvailabilityService {
 
     @Override
     public Set<String> getAvailableSeatIds(Show show) {
-        List<String> allSeatsIds = show.getScreen().getSeats().stream().map(Seat::getId).collect(Collectors.toSet());
+        Set<String> allSeatsIds = show.getScreen().getSeats().stream().map(Seat::getId).collect(Collectors.toSet());
         Set<String> unavailableSeats = getUnavailableSeatIds(show);
 
         Set<String> availableSeats = new HashSet<>(allSeatsIds);
