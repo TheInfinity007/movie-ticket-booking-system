@@ -79,6 +79,6 @@ public class InMemorySeatLockProvider implements SeatLockProvider {
 
     @Override
     public boolean validateLock(Show show, Seat seat, String user) {
-        return isSeatLocked(show, seat.getId()) && locks.get(show.getId()).get(seat.getId()).getLockedBy().equals();
+        return isSeatLocked(show, seat.getId()) && locks.get(show.getId()).get(seat.getId()).getLockedBy().equals(user);
     }
 }
